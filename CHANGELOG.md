@@ -1,7 +1,28 @@
 ### HEAD
+* Add php-mbstring extension ([#504](https://github.com/roots/trellis/pull/504))
+* Add more necessary PHP extensions ([#503](https://github.com/roots/trellis/pull/503))
+
+### 0.9.6: February 18th, 2016
+* Update to latest ansible-role-mailhog version ([#497](https://github.com/roots/trellis/pull/497))
+* Add `reverse_www` filter to fix `www_redirect` ([#486](https://github.com/roots/trellis/pull/486))
+* Add IP address variable, move some variables to top of Vagrantfile ([#494](https://github.com/roots/trellis/pull/494))
+* Keep Composer updated ([#493](https://github.com/roots/trellis/pull/493))
+* Use prestissimo Composer plugin ([#492](https://github.com/roots/trellis/pull/492))
+* Use ansible-role-composer ([#491](https://github.com/roots/trellis/pull/491))
+* Fix bad `curl` output ([#490](https://github.com/roots/trellis/pull/490))
+* Fixes #410 - Default to 1 CPU in Vagrant ([#487](https://github.com/roots/trellis/pull/487))
+
+### 0.9.5: February 10th, 2016
+* Fix Nginx includes for Ansible 2.0 ([#473](https://github.com/roots/trellis/pull/473))
+* Use `ondrej/php` PPA since `ondrej/php-7.0` is deprecated ([#479](https://github.com/roots/trellis/pull/479))
+* Fix Ansible 2.x deploys and require version 2.x ([#478](https://github.com/roots/trellis/pull/478))
+* Update to PHP 7.0 and remove HHVM ([#432](https://github.com/roots/trellis/pull/432))
+* Windows: Sync `hosts` dir with proper permissions ([#460](https://github.com/roots/trellis/pull/460))
+* Fix `inventory_file` variable in connection tests ([#470](https://github.com/roots/trellis/pull/470))
 * Fix conditional logic for permalink setup task ([#467](https://github.com/roots/trellis/pull/467))
 * Fix permalink setup during WordPress Install ([#466](https://github.com/roots/trellis/pull/466))
 * Fix deploy pre-flight check for verifying repo ([#463](https://github.com/roots/trellis/pull/463))
+* Ansible 2.0 compatibility ([#461](https://github.com/roots/trellis/pull/461))
 * Add pre-flight checks for common deploy problems ([#459](https://github.com/roots/trellis/pull/459))
 * Prevent duplicate hosts entries made by `vagrant-hostsupdater` ([#458](https://github.com/roots/trellis/pull/458))
 * Fix README's `ansible-playbook` command for server.yml ([#456](https://github.com/roots/trellis/pull/456))

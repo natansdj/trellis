@@ -88,19 +88,14 @@ server {
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     fastcgi_param DOCUMENT_ROOT $realpath_root;
-
-    {% if hhvm -%}
-      fastcgi_pass unix:/var/run/hhvm/hhvm.sock;
-    {% else -%}
-      fastcgi_pass unix:/var/run/php5-fpm-wordpress.sock;
-    {% endif -%}
+    fastcgi_pass unix:/var/run/php-fpm-wordpress.sock;
   }
 }
 
 {% if item.value.ssl is defined and item.value.ssl.enabled | default(False) %}
 server {
   listen 80;
-  server_name {{ item.value.site_hosts | join(' ') }};
+  server_name {{ item.value.site_hosts | join(' ') }} {{ item.value.site_hosts | reverse_www | join(' ') }};
   return 301 https://$host$request_uri;
 }
 {% endif %}
@@ -113,7 +108,7 @@ server {
     listen 80;
   {% endif -%}
 
-  server_name {{ host | match('^www\\.(.*)') | ternary(host | regex_replace('^www\\.(.*)', '\\1'), 'www.' + host ) }};
+  server_name {{ host | reverse_www }};
   return 301 $scheme://{{ host }}$request_uri;
 }
 {% endfor %}
