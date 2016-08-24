@@ -70,9 +70,45 @@ Vagrant.configure('2') do |config|
     fail_with_message "vagrant-hostmanager missing, please install the plugin with this command:\nvagrant plugin install vagrant-hostmanager"
   end
 
-  if Vagrant::Util::Platform.windows? and !Vagrant.has_plugin? 'vagrant-winnfsd'
-    wordpress_sites.each_pair do |name, site|
-      config.vm.synced_folder local_site_path(site), remote_site_path(name, site), owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
+  if Vagrant::Util::Platform.windows?
+    if Vagrant.has_plugin? 'vagrant-winnfsd'
+      wordpress_sites.each_pair do |name, site|
+        config.vm.synced_folder local_site_path(site), remote_site_path(name, site), owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
+        #config.vm.synced_folder local_site_path(site), remote_site_path(name, site), type: 'nfs', mount_options: ['vers=3', 'udp', 'nolock', 'actimeo=1']
+      end
+    else
+      # Vagrant unison - bidirectional sync
+      if Vagrant.has_plugin? 'vagrant-unison2'
+        wordpress_sites.each_pair do |name, site|
+          # Required configs
+          config.unison.host_folder = local_site_path(site) #"src/"  #relative to the folder your Vagrantfile is in
+          config.unison.guest_folder = remote_site_path(name, site) #"src/" #relative to the vagrant home folder -> /home/vagrant
+
+          # Optional configs
+          # File patterns to ignore when syncing. Ensure you don't have spaces between the commas!
+          config.unison.ignore = "Name {.DS_Store,.git,node_modules,.idea}" # Ensure you don't have spaces between the commas!
+
+          # SSH connection details for Vagrant to communicate with VM.
+          config.unison.ssh_host = "127.0.0.1" # Default is '127.0.0.1'
+          config.unison.ssh_port = 2222 # Default is 2222
+          config.unison.ssh_user = "vagrant" # Default is 'vagrant'
+          config.unison.perms = 0 # if you get "properties changed on both sides" error
+
+          # `vagrant unison-sync-polling` command will restart unison in VM if memory
+          # usage gets above this threshold (in MB).
+          config.unison.mem_cap_mb = 500 # Default: 200
+
+          # Change polling interval (in seconds) at which to sync changes
+          config.unison.repeat = 5 # Default: 1
+        end
+      else
+        wordpress_sites.each_pair do |name, site|
+          #default sync
+          config.vm.synced_folder local_site_path(site), remote_site_path(name, site), owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
+          #RSYNC
+          #config.vm.synced_folder local_site_path(site), remote_site_path(name, site), type: 'rsync', rsync__args: ['--verbose', '--archive', '--delete', '-z', '--copy-links', '--no-perms'], rsync__exclude: ['.git/', '.idea/'], owner: 'vagrant', group: 'www-data'
+        end
+      end
     end
     config.vm.synced_folder File.join(ANSIBLE_PATH, 'hosts'), File.join(ANSIBLE_PATH.sub(__dir__, '/vagrant'), 'hosts'), mount_options: ['dmode=755', 'fmode=644']
   else
@@ -117,6 +153,9 @@ Vagrant.configure('2') do |config|
     # Fix for slow external network connections
     vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
     vb.customize ['modifyvm', :id, '--natdnsproxy1', 'on']
+
+    #Enable Symlink on shared folder
+    #vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
 
   # VMware Workstation/Fusion settings

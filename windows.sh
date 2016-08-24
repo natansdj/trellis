@@ -47,3 +47,26 @@ fi
 echo "Running Ansible Playbooks"
 cd ${ANSIBLE_PATH}/
 ansible-playbook dev.yml -e vagrant_version=$1
+
+# Install NodeJS and its dependencies if not installed.
+if [ ! -f /usr/bin/nodejs ]; then
+  echo "Installing nodejs..."
+  sudo apt-get -y install nodejs
+  echo "Installing node..."
+  sudo apt-get -y install node
+fi
+
+# Install NPM and its dependencies if not installed.
+if [ ! -f /usr/bin/npm ]; then
+  echo "Installing npm..."
+  sudo apt-get -y install npm
+  sudo npm install --silent -g -y bower gulp
+  sudo npm install --silent -g rimraf
+fi
+
+# Install unison 2.48.3
+if [ ! -f /usr/bin/unison ]; then
+  echo "Installing unison"
+  sudo apt-get install unison
+  #curl -sL https://www.archlinux.org/packages/extra/x86_64/unison/download/unison-2.48.3-2-x86_64.pkg.tar.xz | tar Jx
+fi

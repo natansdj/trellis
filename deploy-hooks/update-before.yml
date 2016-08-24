@@ -1,0 +1,23 @@
+# Placeholder `deploy_update_before` hook for update local repository
+#
+# ---
+ - name: Git fetch from origin
+   command: git fetch origin
+   connection: local
+   become: no
+   args:
+     chdir: "{{ project.local_path }}"
+
+ - name: Git checkout to destination branch
+   command: git checkout {{ project_version }}
+   connection: local
+   become: no
+   args:
+     chdir: "{{ project.local_path }}"
+
+ - name: Git merge latest changes
+   command: git merge origin/{{ project_version }}
+   connection: local
+   become: no
+   args:
+     chdir: "{{ project.local_path }}"

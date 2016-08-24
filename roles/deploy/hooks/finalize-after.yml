@@ -35,3 +35,9 @@
   args:
     chdir: "{{ deploy_helper.new_release_path }}"
     warn: false
+
+- name: Update WP .htaccess
+  command: wp rewrite flush --hard
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+  when: wp_installed | success

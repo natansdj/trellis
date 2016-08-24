@@ -3,6 +3,7 @@
   apt:
     name: ssmtp
     state: present
+    force: yes
 
 - name: ssmtp configuration
   template:

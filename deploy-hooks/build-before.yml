@@ -4,28 +4,39 @@
 # Uncomment the lines below and replace `sage` with your theme folder
 #
 # ---
+# - name: Run rimraf node_modules
+#   command: rimraf node_modules
+#   connection: local
+#   become: no
+#   args:
+#     chdir: "{{ trellis_root }}/current/web/app/themes/vti"
+#
 # - name: Run npm install
 #   command: npm install
 #   connection: local
+#   become: no
 #   args:
-#     chdir: "{{ project.local_path }}/web/app/themes/sage"
+#     chdir: "{{ trellis_root }}/current/web/app/themes/vti"
 #
 # - name: Run bower install
 #   command: bower install
 #   connection: local
+#   become: no
 #   args:
-#     chdir: "{{ project.local_path }}/web/app/themes/sage"
+#     chdir: "{{ trellis_root }}/current/web/app/themes/vti"
 #
 # - name: Run gulp
 #   command: gulp --production
 #   connection: local
+#   become: no
 #   args:
-#     chdir: "{{ project.local_path }}/web/app/themes/sage"
-#
-# - name: Copy project local files
-#   synchronize:
-#     src: "{{ project.local_path }}/web/app/themes/sage/dist"
-#     dest: "{{ deploy_helper.new_release_path }}/web/app/themes/sage"
-#     group: no
-#     owner: no
-#     rsync_opts: --chmod=Du=rwx,--chmod=Dg=rx,--chmod=Do=rx,--chmod=Fu=rw,--chmod=Fg=r,--chmod=Fo=r
+#     chdir: "{{ trellis_root }}/current/web/app/themes/vti"
+
+ - name: Copy project local files
+   synchronize:
+     become: no
+     src: "{{ trellis_root }}/current/web/app/themes/vti/dist"
+     dest: "{{ deploy_helper.new_release_path }}/web/app/themes/vti"
+     group: yes
+     owner: yes
+     rsync_opts: --chmod=Du=rwx,--chmod=Dg=rx,--chmod=Do=rx,--chmod=Fu=rw,--chmod=Fg=r,--chmod=Fo=r

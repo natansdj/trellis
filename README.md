@@ -36,6 +36,7 @@ Make sure all dependencies have been installed before moving on:
 * [Vagrant](https://www.vagrantup.com/downloads.html) >= 1.8.5
 * [vagrant-bindfs](https://github.com/gael-ian/vagrant-bindfs#installation) >= 0.3.1 (Windows users may skip this)
 * [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager#installation)
+* [vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd#installation) • [Docs](https://github.com/winnfsd/vagrant-winnfsd) (for Windows users only)
 
 ## Installation
 
@@ -67,6 +68,19 @@ Trellis documentation is available at [https://roots.io/trellis/docs/](https://r
 
 1. Configure your WordPress sites in `group_vars/development/wordpress_sites.yml` and in `group_vars/development/vault.yml`
 2. Run `vagrant up`
+
+## Windows local development setup
+
+Development server
+1. Configure your WordPress sites in `group_vars/development/wordpress_sites.yml` and in `group_vars/development/vault.yml`
+2. Run `vagrant up`
+If there are error message :
+ERROR! the role 'composer' was not found in /vagrant/roles:/vagrant:vendor/roles
+ignore it and wait until the vagrant up is finished
+3. vagrant ssh
+4. cd /vagrant
+5. ansible-galaxy install -r requirements.yml
+6. ansible-playbook dev.yml
 
 [Read the local development docs](https://roots.io/trellis/docs/local-development-setup/) for more information.
 

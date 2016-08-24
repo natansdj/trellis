@@ -5,14 +5,19 @@
 
 - name: Deploy WP site
   hosts: web:&{{ env }}
-  remote_user: "{{ web_user }}"
+  #remote_user: "{{ web_user }}"
+  remote_user: "{{ admin_user }}"
+  become: yes
+  become_user: "{{ [project.default_user|default('voxteneo')] }}"
 
   vars:
+    deploy_update_before: "{{ playbook_dir }}/deploy-hooks/update-before.yml"
     deploy_build_before: "{{ playbook_dir }}/deploy-hooks/build-before.yml"
     deploy_build_after: "{{ playbook_dir }}/roles/deploy/hooks/build-after.yml"
     deploy_finalize_after: "{{ playbook_dir }}/roles/deploy/hooks/finalize-after.yml"
     project: "{{ wordpress_sites[site] }}"
     project_root: "{{ www_root }}/{{ site }}"
+    trellis_root: "{{ www_root_trellis }}/{{ wordpress_sites[site].dev_path }}"
     wordpress_env_defaults:
       db_host: localhost
       db_name: "{{ site | underscore }}_{{ env }}"
